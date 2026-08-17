@@ -1,0 +1,12 @@
+include: package:very_good_analysis/analysis_options.yaml
+linter:
+  rules:
+    public_member_api_docs: false
+    one_member_abstracts: false
+    eol_at_end_of_file: false
+    directives_ordering: false
+analyzer:
+  errors:
+    omit_local_variable_types: ignore
+    lines_longer_than_80_chars: ignore
+  exclude: [lib/**.g.dart, lib/**.config.dart, lib/**.freezed.dart, lib/generated/**.dart]
