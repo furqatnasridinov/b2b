@@ -32,7 +32,7 @@ class RegisterModel extends RegisterEntity {
       phone: map['phone'] as String? ?? '',
       role: Role.values.firstWhere(
         (role) => role.name == map['role'],
-        orElse: () => Role.seller,
+        orElse: () => Role.supplier,
       ),
     );
   }

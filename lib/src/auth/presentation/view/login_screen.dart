@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:b2b_seller/core/common/screens/main_screen.dart';
 import 'package:b2b_seller/core/common/widget/widget.dart';
+import 'package:b2b_seller/core/services/app_constants.dart';
 import 'package:b2b_seller/core/services/enums.dart';
 import 'package:b2b_seller/core/services/validators.dart';
 import 'package:b2b_seller/src/auth/presentation/bloc/auth/auth_cubit.dart';
@@ -26,7 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  Role _selectedRole = Role.seller;
+  Role _selectedRole = Role.supplier;
+  final bool _autoFillDemoCredentials = true;
 
   @override
   void dispose() {
@@ -48,6 +50,23 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void _onRoleChanged(Role role) {
+    setState(() => _selectedRole = role);
+    if (!_autoFillDemoCredentials) return;
+
+    switch (role) {
+      case Role.buyer:
+        _emailController.text = AppConstants.buyerEmail;
+        _passwordController.text = AppConstants.buyerPassword;
+      case Role.supplier:
+        _emailController.text = AppConstants.sellerEmail;
+        _passwordController.text = AppConstants.sellerPassword;
+      case Role.admin:
+        _emailController.text = AppConstants.adminEmail;
+        _passwordController.text = AppConstants.adminPassword;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthCubitState>(
@@ -62,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
           title: 'Вход',
           subtitle: 'Выберите роль и войдите в аккаунт',
           selectedRole: _selectedRole,
-          onRoleChanged: (role) => setState(() => _selectedRole = role),
+          onRoleChanged: _onRoleChanged,
           form: AutofillGroup(
             child: Form(
               key: _formKey,

@@ -30,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  Role _selectedRole = Role.seller;
+  Role _selectedRole = Role.supplier;
 
   @override
   void dispose() {

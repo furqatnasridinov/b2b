@@ -7,7 +7,7 @@ class RegisterEntity{
     required this.firstName,
     required this.lastName,
     required this.phone,
-    this.role = Role.seller,
+    this.role = Role.supplier,
   });
 
   final String email;

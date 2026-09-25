@@ -45,7 +45,7 @@ class AuthScaffold extends StatelessWidget {
                             Expanded(
                               child: _RoleOption(
                                 icon: Icons.person_rounded,
-                                label: Role.buyer.name,
+                                label: Role.buyer.nameTr,
                                 isSelected: selectedRole == Role.buyer,
                                 onTap: () => onRoleChanged(Role.buyer),
                               ),
@@ -54,9 +54,9 @@ class AuthScaffold extends StatelessWidget {
                             Expanded(
                               child: _RoleOption(
                                 icon: Icons.storefront_rounded,
-                                label: Role.seller.name,
-                                isSelected: selectedRole == Role.seller,
-                                onTap: () => onRoleChanged(Role.seller),
+                                label: Role.supplier.nameTr,
+                                isSelected: selectedRole == Role.supplier,
+                                onTap: () => onRoleChanged(Role.supplier),
                               ),
                             ),
                           ],
