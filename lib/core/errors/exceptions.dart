@@ -109,8 +109,10 @@ class HttpException extends Equatable implements Exception {
   factory HttpException.fromDio(DioException exception) {
     int statusCode;
     String message;
-    final Map<String,dynamic>? data = exception.response?.data as Map<String,dynamic>?;
-    final messageFromException = data?['errors'] ?? '';
+    final responseData = exception.response?.data;
+    final data = responseData is Map<String, dynamic> ? responseData : null;
+    final errors = data?['errors'];
+    final messageFromException = errors == null ? '' : ' $errors';
     switch (exception.type) {
       case DioExceptionType.connectionError:
         statusCode = 503;
@@ -164,7 +166,7 @@ class HttpException extends Equatable implements Exception {
 
     return HttpException(
       statusCode: statusCode,
-      message: '$message $messageFromException',
+      message: '$message$messageFromException',
     );
   }
 

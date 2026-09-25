@@ -1,3 +1,4 @@
+import 'package:b2b_seller/core/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 
 final ThemeData lightTheme = ThemeData(
@@ -6,6 +7,7 @@ final ThemeData lightTheme = ThemeData(
   scaffoldBackgroundColor: Colors.white,
   colorScheme: ColorScheme.fromSeed(
     seedColor: Colors.blue, // Generates a harmonized color scheme
+    primary: AppColors.primary,
   ),
   // Define other properties like appBarTheme, button themes, etc.
   appBarTheme: const AppBarTheme(

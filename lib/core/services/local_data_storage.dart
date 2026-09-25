@@ -46,4 +46,5 @@ class LocalDataStorageKeys {
 
   static const String isDarkMode = 'isDarkMode';
   static const String locale = 'locale';
+  static const String baseUrl = 'baseUrl';
 }

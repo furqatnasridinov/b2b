@@ -6,6 +6,7 @@ import 'package:b2b_seller/core/router/router.dart';
 import 'package:b2b_seller/core/services/app_constants.dart';
 import 'package:b2b_seller/core/utils/themes/dark_theme.dart';
 import 'package:b2b_seller/core/utils/themes/light_theme.dart';
+import 'package:b2b_seller/src/auth/presentation/bloc/me/me_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       providers: [
         //bloc for app setting
         BlocProvider(create: (context) => sl<AppSettingsCubit>()),
+        BlocProvider(create: (context) => sl<MeCubit>()),
       ],
       child: BlocBuilder<AppSettingsCubit, AppSettingEntity>(
         builder: (context, state) {

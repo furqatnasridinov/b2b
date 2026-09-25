@@ -1,4 +1,5 @@
 import 'package:b2b_seller/core/errors/exceptions.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 /// Abstraction of [Exception] class
@@ -7,15 +8,17 @@ import 'package:equatable/equatable.dart';
 abstract class Failure extends Equatable {
   const Failure({
     required this.message,
+    this.statusCode,
   });
 
   final String message;
+  final int? statusCode;
 
   /// returns stringified [message].
-  String get errorMessage => '$Error: $message';
+  String get errorMessage => '$statusCode: $message';
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, statusCode];
 }
 
 /// Implementation of [Failure] to handle cache-related failures
@@ -97,11 +100,49 @@ class ClientFailure extends Failure {
 class GeneralFailure extends Failure {
   const GeneralFailure({
     required super.message,
+    super.statusCode,
   });
 
   factory GeneralFailure.fromException(GeneralException exception) {
     return GeneralFailure(
       message: exception.message,
+    );
+  }
+
+  factory GeneralFailure.fromDioException(DioException exception) {
+    String message = exception.message ?? '';
+    try {
+      final responseData = exception.response?.data;
+      final statusCode = exception.response?.statusCode;
+      if (responseData is Map<String, dynamic>) {
+        message =
+            responseData['detail'] as String? ??
+            responseData['message'] as String? ??
+            responseData['error'] as String? ??
+            'Could not get error message from DioException ';
+      }
+
+      // try to get message from error (not from server)
+      if (message.isEmpty) {
+        message = 'Something went wrong';
+      }
+      return GeneralFailure(
+        message: message,
+        statusCode: statusCode,
+      );
+    } catch (e) {
+      return const GeneralFailure(
+        message: 'Could not get error message from DioException ',
+      );
+    }
+  }
+
+  factory GeneralFailure.fromObject(Object exception) {
+    if (exception is DioException) {
+      return GeneralFailure.fromDioException(exception);
+    }
+    return GeneralFailure(
+      message: exception.toString(),
     );
   }
 
