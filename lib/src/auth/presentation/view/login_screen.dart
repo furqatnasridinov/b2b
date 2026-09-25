@@ -59,8 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text = AppConstants.buyerEmail;
         _passwordController.text = AppConstants.buyerPassword;
       case Role.supplier:
-        _emailController.text = AppConstants.sellerEmail;
-        _passwordController.text = AppConstants.sellerPassword;
+        _emailController.text = AppConstants.supplierEmail;
+        _passwordController.text = AppConstants.supplierPassword;
       case Role.admin:
         _emailController.text = AppConstants.adminEmail;
         _passwordController.text = AppConstants.adminPassword;
