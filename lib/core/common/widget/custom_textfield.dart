@@ -94,7 +94,7 @@ class CustomTextfield extends StatelessWidget {
     }
     if (base != null) return base;
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(14),
       borderSide: BorderSide(color: color, width: width),
     );
   }

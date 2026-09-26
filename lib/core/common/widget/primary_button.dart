@@ -14,6 +14,7 @@ class PrimaryButton extends StatelessWidget {
     this.foregroundColor,
     this.isDisabled = false,
     this.child,
+    this.addShadow = false,
   });
 
   final VoidCallback onPressed;
@@ -24,27 +25,47 @@ class PrimaryButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final bool isDisabled;
-  final Widget? child; // second widget to show instead of title
+  final Widget? child;
+  final bool addShadow;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    final resolvedBackground = backgroundColor ?? context.colorScheme.primary;
+
+    return Container(
       width: width ?? context.width,
       height: height ?? 40,
+      decoration: addShadow
+          ? BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: resolvedBackground.withValues(alpha: 0.35),
+                  blurRadius: 16,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            )
+          : null,
       child: FilledButton(
-        //onLongPress: () {},
         onPressed: isLoading || isDisabled ? null : onPressed,
         style: FilledButton.styleFrom(
           foregroundColor: foregroundColor ?? context.colorScheme.onPrimary,
-          backgroundColor: backgroundColor ?? context.colorScheme.primary,
+          backgroundColor: resolvedBackground,
           disabledBackgroundColor: context.colorScheme.primary.withValues(
             alpha: 0.3,
           ),
+          elevation: 0,
+          shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        child: isLoading ? const CustomLoader() : child ?? Text(title),
+        child: isLoading
+            ? CustomLoader(
+                color: context.colorScheme.onPrimary,
+              )
+            : child ?? Text(title),
       ),
     );
   }

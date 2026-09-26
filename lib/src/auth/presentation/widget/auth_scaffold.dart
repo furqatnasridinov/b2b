@@ -28,10 +28,10 @@ class AuthScaffold extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight - 48,
+                  minHeight: constraints.maxHeight - 64,
                 ),
                 child: Center(
                   child: ConstrainedBox(
@@ -40,6 +40,16 @@ class AuthScaffold extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headlineLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: colorScheme.onSurface,
+                              ),
+                        ),
+                        const SizedBox(height: 28),
                         Row(
                           children: [
                             Expanded(
@@ -50,7 +60,7 @@ class AuthScaffold extends StatelessWidget {
                                 onTap: () => onRoleChanged(Role.buyer),
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: _RoleOption(
                                 icon: Icons.storefront_rounded,
@@ -61,25 +71,21 @@ class AuthScaffold extends StatelessWidget {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 40,
+                          child: Text(
+                            subtitle,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                          ),
+                        ),
                         const SizedBox(height: 28),
-                        Text(
-                          title,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          subtitle,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                        ),
-                        const SizedBox(height: 32),
                         form,
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 20),
                         footer,
                       ],
                     ),
@@ -110,41 +116,49 @@ class _RoleOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final selectedBg = colorScheme.primary.withValues(alpha: 0.2);
+    final unselectedBg = colorScheme.surfaceContainerLow.withValues(alpha: 0.7);
     final foregroundColor = isSelected
-        ? colorScheme.onPrimary
-        : colorScheme.onSurface;
+        ? colorScheme.primary
+        : colorScheme.onSurfaceVariant;
 
-    return Semantics(
-      button: true,
-      selected: isSelected,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? colorScheme.primary
-                : colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: isSelected
-                  ? colorScheme.primary
-                  : colorScheme.outlineVariant,
-            ),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: isSelected ? selectedBg : unselectedBg,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 14,
+            horizontal: 12,
           ),
-          child: Column(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: foregroundColor, size: 42),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: foregroundColor,
-                  fontWeight: FontWeight.w600,
+              Icon(icon, color: foregroundColor, size: 20),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: foregroundColor,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
+              if (isSelected) ...[
+                const SizedBox(width: 6),
+                Icon(
+                  Icons.check_rounded,
+                  color: colorScheme.primary,
+                  size: 18,
+                ),
+              ],
             ],
           ),
         ),

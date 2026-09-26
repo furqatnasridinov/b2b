@@ -1,60 +1,57 @@
 import 'package:b2b_seller/core/services/enums.dart';
-import 'package:b2b_seller/src/auth/domain/entity/user_entity.dart';
-import 'package:b2b_seller/src/auth/domain/usecase/auth_user_usecase.dart';
+import 'package:b2b_seller/src/catalog/domain/entity/catalog_item_entity.dart';
+import 'package:b2b_seller/src/catalog/domain/usecase/get_catalog_items_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class MeCubit extends Cubit<MeCubitState> {
-  MeCubit(
-    this._getCurrentUserUsecase,
-  ) : super(const MeCubitState());
+class CatalogCubit extends Cubit<CatalogCubitState> {
+  CatalogCubit(this._getCatalogItemsUsecase) : super(const CatalogCubitState());
 
-  final GetCurrentUserUsecase _getCurrentUserUsecase;
+  final GetCatalogItemsUsecase _getCatalogItemsUsecase;
 
   Future<void> get() async {
+    if (state.isLoading) return;
+
     emit(
-      MeCubitState(
+      CatalogCubitState(
         status: ProgressStatus.inProgress,
-        user: state.user,
+        items: state.items,
       ),
     );
 
-    final result = await _getCurrentUserUsecase.call();
+    final result = await _getCatalogItemsUsecase.call();
 
     result.fold(
       (failure) {
         emit(
-          MeCubitState(
+          CatalogCubitState(
             status: ProgressStatus.failure,
             errorMessage: failure.errorMessage,
-            statusCode: failure.statusCode,
-            user: state.user,
+            items: state.items,
           ),
         );
       },
-      (response) => emit(
-        MeCubitState(
+      (items) => emit(
+        CatalogCubitState(
           status: ProgressStatus.success,
-          user: response,
+          items: items,
         ),
       ),
     );
   }
 }
 
-class MeCubitState {
-  const MeCubitState({
+class CatalogCubitState {
+  const CatalogCubitState({
     this.status = ProgressStatus.idle,
     this.errorMessage,
-    this.user,
-    this.statusCode,
+    this.items = const [],
   });
 
   final ProgressStatus status;
   final String? errorMessage;
-  final UserEntity? user;
-  final int? statusCode;
+  final List<CatalogItemEntity> items;
 
   bool get isIdle => status == ProgressStatus.idle;
   bool get isLoading => status == ProgressStatus.inProgress;
