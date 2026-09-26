@@ -1,4 +1,7 @@
+import 'package:b2b_seller/src/auth/domain/entity/user_entity.dart';
+import 'package:b2b_seller/src/auth/presentation/bloc/me/me_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// [ContextExtension]
 ///
@@ -84,4 +87,7 @@ extension ContextExtension on BuildContext {
   /// Shows a [SnackBar] across all registered [Scaffold]s.
   void showSnackBar(SnackBar snackBar) =>
       scaffoldMessenger.showSnackBar(snackBar);
+
+  UserEntity? get me => read<MeCubit>().state.user;
+  
 }

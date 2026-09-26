@@ -8,8 +8,8 @@ enum Role {
 
 extension RoleEx on Role {
   String get nameTr => switch (this) {
-    Role.buyer => 'Исполнитель',
-    Role.supplier => 'Поставщик',
+    Role.buyer => 'Заказчик',
+    Role.supplier => 'Исполнитель',
     Role.admin => 'Администратор',
   };
 
@@ -18,4 +18,9 @@ extension RoleEx on Role {
     Role.supplier => 'Предлагаю свои товары/услуги и откликаюсь на заказы',
     Role.admin => 'Управляю системой и пользователями',
   };
+}
+
+enum CatalogType {
+  product,
+  service,
 }

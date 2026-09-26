@@ -14,7 +14,10 @@ class MeCubit extends Cubit<MeCubitState> {
 
   Future<void> get() async {
     emit(
-      const MeCubitState(status: ProgressStatus.inProgress),
+      MeCubitState(
+        status: ProgressStatus.inProgress,
+        user: state.user,
+      ),
     );
 
     final result = await _getCurrentUserUsecase.call();
@@ -26,6 +29,7 @@ class MeCubit extends Cubit<MeCubitState> {
             status: ProgressStatus.failure,
             errorMessage: failure.errorMessage,
             statusCode: failure.statusCode,
+            user: state.user,
           ),
         );
       },

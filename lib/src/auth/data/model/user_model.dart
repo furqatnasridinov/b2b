@@ -32,6 +32,9 @@ class UserModel extends UserEntity {
 
   static Role? _roleFromValue(dynamic value) {
     if (value == null) return null;
+    if (value == 'both') {
+      return Role.supplier;
+    }
     for (final role in Role.values) {
       if (role.name == value.toString().toLowerCase()) return role;
     }

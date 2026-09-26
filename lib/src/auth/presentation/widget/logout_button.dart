@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:b2b_seller/core/common/widget/primary_button.dart';
-import 'package:b2b_seller/core/extensions/context_extension.dart';
+import 'package:b2b_seller/core/common/widget/custom_loader.dart';
 import 'package:b2b_seller/core/injection/injection.dart';
 import 'package:b2b_seller/core/services/app_snackbar.dart';
 import 'package:b2b_seller/src/auth/presentation/bloc/logout/logout_cubit.dart';
@@ -39,31 +38,66 @@ class _LogOutButtonContent extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            PrimaryButton(
-              onPressed: () {
-                unawaited(context.read<LogOutCubit>().logOut());
-              },
-              title: 'Выйти',
-              width: 180,
-              height: 48,
-              isLoading: state.isLoading,
-              backgroundColor: context.colorScheme.error,
-              foregroundColor: context.colorScheme.onError,
-            ),
-            if (state.isFailed) ...[
-              const SizedBox(height: 8),
-              Text(
-                state.errorMessage ?? 'Не удалось выйти из аккаунта',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                ),
+        final colors = Theme.of(context).colorScheme;
+
+        return InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: state.isLoading
+              ? null
+              : () => unawaited(context.read<LogOutCubit>().logOut()),
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: colors.error.withValues(alpha: 0.18),
               ),
-            ],
-          ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 14,
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 42,
+                    height: 42,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: colors.error.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: state.isLoading
+                          ? CustomLoader(
+                              radius: 8,
+                              color: colors.error,
+                            )
+                          : Icon(
+                              Icons.logout_rounded,
+                              color: colors.error,
+                              size: 22,
+                            ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Выйти',
+                      style: Theme.of(context).textTheme.titleMedium
+                          ?.copyWith(
+                            color: colors.error,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: colors.error.withValues(alpha: 0.65),
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );

@@ -35,6 +35,15 @@ import 'package:b2b_seller/src/auth/presentation/bloc/logout/logout_cubit.dart'
     as _i725;
 import 'package:b2b_seller/src/auth/presentation/bloc/me/me_cubit.dart'
     as _i384;
+import 'package:b2b_seller/src/catalog/data/data_source/catalog_remote_datasource.dart'
+    as _i412;
+import 'package:b2b_seller/src/catalog/data/repo_impl/catalog_repo_impl.dart'
+    as _i839;
+import 'package:b2b_seller/src/catalog/domain/repo/catalog_repo.dart' as _i21;
+import 'package:b2b_seller/src/catalog/domain/usecase/get_catalog_items_usecase.dart'
+    as _i622;
+import 'package:b2b_seller/src/catalog/presentation/bloc/catalog_cubit.dart'
+    as _i744;
 import 'package:dio/dio.dart' as _i361;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
@@ -60,14 +69,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i626.AuthRemoteDataSource>(
       () => _i626.AuthRemoteDataSourceImpl(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i412.CatalogRemoteDataSource>(
+      () => _i412.CatalogRemoteDataSourceImpl(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i536.AuthRepo>(
       () => _i820.AuthRepoImpl(
         gh<_i123.AuthLocalDataSource>(),
         gh<_i626.AuthRemoteDataSource>(),
       ),
     );
+    gh.lazySingleton<_i21.CatalogRepo>(
+      () => _i839.CatalogRepoImpl(gh<_i412.CatalogRemoteDataSource>()),
+    );
     gh.lazySingleton<_i856.LoginUsecase>(
       () => _i856.LoginUsecase(gh<_i536.AuthRepo>()),
+    );
+    gh.lazySingleton<_i622.GetCatalogItemsUsecase>(
+      () => _i622.GetCatalogItemsUsecase(gh<_i21.CatalogRepo>()),
     );
     gh.lazySingleton<_i911.GetCurrentUserUsecase>(
       () => _i911.GetCurrentUserUsecase(gh<_i536.AuthRepo>()),
@@ -109,6 +127,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i235.SaveAccessTokenUseCase>(),
         gh<_i235.SaveRefreshTokenUseCase>(),
       ),
+    );
+    gh.factory<_i744.CatalogCubit>(
+      () => _i744.CatalogCubit(gh<_i622.GetCatalogItemsUsecase>()),
     );
     gh.factory<_i384.MeCubit>(
       () => _i384.MeCubit(gh<_i911.GetCurrentUserUsecase>()),

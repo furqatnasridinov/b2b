@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context, state) {
         return AuthScaffold(
           title: 'Вход',
-          subtitle: 'Выберите роль и войдите в аккаунт',
+          subtitle: _selectedRole.shortDescription,
           selectedRole: _selectedRole,
           onRoleChanged: _onRoleChanged,
           form: AutofillGroup(
@@ -110,6 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     title: 'Войти',
                     height: 52,
                     isLoading: state.isLoading,
+                    addShadow: !state.isLoading,
                   ),
                   if (state.isFailed) ...[
                     const SizedBox(height: 12),
@@ -128,12 +129,24 @@ class _LoginScreenState extends State<LoginScreen> {
           footer: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Нет аккаунта?'),
+              Text(
+                'Нет аккаунта?',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
               TextButton(
                 onPressed: state.isLoading
                     ? null
                     : () => context.go(RegisterScreen.path),
-                child: const Text('Зарегистрироваться'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                ),
+                child: const Text(
+                  'Зарегистрироваться',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
               ),
             ],
           ),
