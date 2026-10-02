@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:b2b_seller/core/common/screens/buyer_home_screen.dart';
+import 'package:b2b_seller/core/common/screens/main_screen.dart';
 import 'package:b2b_seller/core/common/widget/glass_nav_bar.dart';
 import 'package:b2b_seller/core/services/enums.dart';
 import 'package:b2b_seller/src/auth/presentation/bloc/me/me_cubit.dart';
@@ -7,15 +9,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+/// Must match the branch order in `AppRouter`.
 abstract final class ShellBranchIndex {
-  static const home = 0;
-  static const buyerProducts = 1;
-  static const supplierRequests = 2;
-  static const chat = 3;
-  static const buyerProfile = 4;
-  static const supplierProfile = 5;
-  static const adminProfile = 6;
+  static const buyerHome = 0;
+  static const supplierHome = 1;
+  static const deals = 2;
+  static const myRequests = 3;
+  static const supplierRequests = 4;
+  static const chat = 5;
+  static const buyerProfile = 6;
+  static const supplierProfile = 7;
+  static const adminProfile = 8;
 }
+
+String homePathFor(Role? role) => switch (role) {
+  Role.buyer => BuyerHomeScreen.path,
+  Role.supplier || Role.admin || null => MainScreen.path,
+};
 
 class ScaffoldWithNavigationShell extends StatefulWidget {
   const ScaffoldWithNavigationShell({
@@ -73,7 +83,7 @@ class _ScaffoldWithNavigationShellState
           WidgetsBinding.instance.addPostFrameCallback((_) {
             _branchResetScheduled = false;
             if (mounted) {
-              widget.navigationShell.goBranch(ShellBranchIndex.home);
+              widget.navigationShell.goBranch(items.first.branchIndex);
             }
           });
         }
@@ -175,7 +185,7 @@ List<_RoleNavItem> _itemsFor(Role role) {
     case Role.buyer:
       return const [
         _RoleNavItem(
-          branchIndex: ShellBranchIndex.home,
+          branchIndex: ShellBranchIndex.buyerHome,
           destination: NavDestinationData(
             icon: Icons.home_outlined,
             activeIcon: Icons.home_rounded,
@@ -183,11 +193,19 @@ List<_RoleNavItem> _itemsFor(Role role) {
           ),
         ),
         _RoleNavItem(
-          branchIndex: ShellBranchIndex.buyerProducts,
+          branchIndex: ShellBranchIndex.deals,
           destination: NavDestinationData(
-            icon: Icons.shopping_bag_outlined,
-            activeIcon: Icons.shopping_bag,
-            label: 'Товары и услуги',
+            icon: Icons.handshake_outlined,
+            activeIcon: Icons.handshake,
+            label: 'Сделки',
+          ),
+        ),
+        _RoleNavItem(
+          branchIndex: ShellBranchIndex.myRequests,
+          destination: NavDestinationData(
+            icon: Icons.assignment_outlined,
+            activeIcon: Icons.assignment,
+            label: 'Мои заявки',
           ),
         ),
         _RoleNavItem(
@@ -210,7 +228,7 @@ List<_RoleNavItem> _itemsFor(Role role) {
     case Role.supplier:
       return const [
         _RoleNavItem(
-          branchIndex: ShellBranchIndex.home,
+          branchIndex: ShellBranchIndex.supplierHome,
           destination: NavDestinationData(
             icon: Icons.home_outlined,
             activeIcon: Icons.home_rounded,
@@ -245,7 +263,7 @@ List<_RoleNavItem> _itemsFor(Role role) {
     case Role.admin:
       return const [
         _RoleNavItem(
-          branchIndex: ShellBranchIndex.home,
+          branchIndex: ShellBranchIndex.supplierHome,
           destination: NavDestinationData(
             icon: Icons.home_outlined,
             activeIcon: Icons.home_rounded,

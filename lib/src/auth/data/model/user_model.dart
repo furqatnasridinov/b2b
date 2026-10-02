@@ -1,4 +1,5 @@
 import 'package:b2b_seller/core/services/enums.dart';
+import 'package:b2b_seller/core/services/local_data_storage.dart';
 import 'package:b2b_seller/core/utils/typedef.dart';
 import 'package:b2b_seller/src/auth/domain/entity/user_entity.dart';
 
@@ -33,10 +34,18 @@ class UserModel extends UserEntity {
   static Role? _roleFromValue(dynamic value) {
     if (value == null) return null;
     if (value == 'both') {
-      return Role.supplier;
+      final savedRole = _parseRole(
+        LocalDataStorage.getString(LocalDataStorageKeys.currentRole),
+      );
+      return savedRole ?? Role.supplier;
     }
+    return _parseRole(value);
+  }
+
+  static Role? _parseRole(dynamic value) {
+    final name = value.toString().toLowerCase();
     for (final role in Role.values) {
-      if (role.name == value.toString().toLowerCase()) return role;
+      if (role.name == name) return role;
     }
     return null;
   }

@@ -37,6 +37,39 @@ class SectionScreenLayout extends StatelessWidget {
   }
 }
 
+class SectionHeader extends StatelessWidget {
+  const SectionHeader({
+    required this.title,
+    this.trailing,
+    this.padding = const EdgeInsets.fromLTRB(20, 8, 20, 12),
+    super.key,
+  });
+
+  final String title;
+  final Widget? trailing;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          ?trailing,
+        ],
+      ),
+    );
+  }
+}
+
 class SectionMenu extends StatelessWidget {
   const SectionMenu({
     required this.title,
@@ -131,7 +164,11 @@ class EmptyState extends StatelessWidget {
                   color: colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Icon(icon, size: 30, color: colors.primary,),
+                child: Icon(
+                  icon,
+                  size: 30,
+                  color: colors.primary,
+                ),
               ),
             ),
             const SizedBox(height: 18),

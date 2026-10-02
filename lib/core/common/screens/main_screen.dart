@@ -15,84 +15,63 @@ class MainScreen extends StatelessWidget {
   static const name = 'main';
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<MeCubit, MeCubitState>(
-      builder: (context, state) {
-        final user = state.user;
-        final nameParts = [user?.firstName, user?.lastName];
-        final fullName = nameParts
-            .whereType<String>()
-            .map((part) => part.trim())
-            .where((part) => part.isNotEmpty)
-            .join(' ');
-        final greeting = fullName.isEmpty
-            ? 'Здравствуйте!'
-            : 'Здравствуйте, $fullName!';
-
-        return _Dashboard(
-          greeting: greeting,
-          role: user?.role,
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context) => const HomeDashboard();
 }
 
-class _Dashboard extends StatelessWidget {
-  const _Dashboard({
-    required this.greeting,
-    required this.role,
+/// Role-based dashboard header with optional [slivers] rendered below it.
+class HomeDashboard extends StatelessWidget {
+  const HomeDashboard({
+    this.slivers = const [],
+    this.onRefresh,
+    super.key,
   });
 
-  final String greeting;
-  final Role? role;
+  final List<Widget> slivers;
+  final RefreshCallback? onRefresh;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final config = _configFor(role);
+
+    final scrollView = CustomScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          sliver: SliverToBoxAdapter(
+            child: BlocBuilder<MeCubit, MeCubitState>(
+              builder: (context, state) => _DashboardHeader(
+                greeting: _greetingFor(state),
+                config: _configFor(state.user?.role),
+              ),
+            ),
+          ),
+        ),
+        ...slivers,
+        const SliverToBoxAdapter(child: SizedBox(height: 110)),
+      ],
+    );
 
     return ColoredBox(
       color: isDark ? colors.surface : const Color(0xFFF5F6F8),
       child: SafeArea(
         bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 110),
-          children: [
-            Text(
-              greeting,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                letterSpacing: -0.4,
-                height: 1.2,
-                color: colors.onSurface,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              config.subtitle,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colors.onSurfaceVariant,
-                height: 1.35,
-              ),
-            ),
-            if (config.actionTitle != null) ...[
-              const SizedBox(height: 16),
-              PrimaryButton(
-                title: config.actionTitle!,
-                height: 48,
-                onPressed: () => config.onAction(context),
-              ),
-            ],
-            if (config.cards.isNotEmpty) ...[
-              const SizedBox(height: 18),
-              _StatsGrid(cards: config.cards),
-            ],
-          ],
-        ),
+        child: onRefresh == null
+            ? scrollView
+            : RefreshIndicator(onRefresh: onRefresh!, child: scrollView),
       ),
     );
+  }
+
+  String _greetingFor(MeCubitState state) {
+    final user = state.user;
+    final fullName = [user?.firstName, user?.lastName]
+        .whereType<String>()
+        .map((part) => part.trim())
+        .where((part) => part.isNotEmpty)
+        .join(' ');
+    return fullName.isEmpty ? 'Здравствуйте!' : 'Здравствуйте, $fullName!';
   }
 
   _DashboardConfig _configFor(Role? role) {
@@ -149,7 +128,7 @@ class _Dashboard extends StatelessWidget {
         subtitle: 'Ваши заявки, предложения и договоры',
         actionTitle: 'Создать заявку',
         actionIcon: Icons.add_rounded,
-        onAction: (context) => context.push(MyRequestsScreen.path),
+        onAction: (context) => context.go(MyRequestsScreen.path),
         cards: const [
           _StatCardData(
             icon: Icons.description_outlined,
@@ -190,6 +169,56 @@ class _Dashboard extends StatelessWidget {
         ],
       ),
     };
+  }
+}
+
+class _DashboardHeader extends StatelessWidget {
+  const _DashboardHeader({
+    required this.greeting,
+    required this.config,
+  });
+
+  final String greeting;
+  final _DashboardConfig config;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          greeting,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.4,
+            height: 1.2,
+            color: colors.onSurface,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          config.subtitle,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: colors.onSurfaceVariant,
+            height: 1.35,
+          ),
+        ),
+        if (config.actionTitle != null) ...[
+          const SizedBox(height: 16),
+          PrimaryButton(
+            title: config.actionTitle!,
+            height: 48,
+            onPressed: () => config.onAction(context),
+          ),
+        ],
+        if (config.cards.isNotEmpty) ...[
+          const SizedBox(height: 18),
+          _StatsGrid(cards: config.cards),
+        ],
+      ],
+    );
   }
 }
 

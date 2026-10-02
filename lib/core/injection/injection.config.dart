@@ -35,15 +35,23 @@ import 'package:b2b_seller/src/auth/presentation/bloc/logout/logout_cubit.dart'
     as _i725;
 import 'package:b2b_seller/src/auth/presentation/bloc/me/me_cubit.dart'
     as _i384;
-import 'package:b2b_seller/src/catalog/data/data_source/catalog_remote_datasource.dart'
-    as _i412;
-import 'package:b2b_seller/src/catalog/data/repo_impl/catalog_repo_impl.dart'
-    as _i839;
-import 'package:b2b_seller/src/catalog/domain/repo/catalog_repo.dart' as _i21;
-import 'package:b2b_seller/src/catalog/domain/usecase/get_catalog_items_usecase.dart'
-    as _i622;
-import 'package:b2b_seller/src/catalog/presentation/bloc/catalog_cubit.dart'
-    as _i744;
+import 'package:b2b_seller/src/public/data/data_source/public_remote_datasource.dart'
+    as _i666;
+import 'package:b2b_seller/src/public/data/repo_impl/public_repo_impl.dart'
+    as _i487;
+import 'package:b2b_seller/src/public/domain/repo/public_repo.dart' as _i307;
+import 'package:b2b_seller/src/public/domain/usecase/get_catalog_items_usecase.dart'
+    as _i805;
+import 'package:b2b_seller/src/public/domain/usecase/get_categories_usecase.dart'
+    as _i931;
+import 'package:b2b_seller/src/public/domain/usecase/get_suppliers_usecase.dart'
+    as _i439;
+import 'package:b2b_seller/src/public/presentation/bloc/catalog_cubit.dart'
+    as _i137;
+import 'package:b2b_seller/src/public/presentation/bloc/categories_cubit.dart'
+    as _i1040;
+import 'package:b2b_seller/src/public/presentation/bloc/suppliers_cubit.dart'
+    as _i35;
 import 'package:dio/dio.dart' as _i361;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
@@ -69,8 +77,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i626.AuthRemoteDataSource>(
       () => _i626.AuthRemoteDataSourceImpl(gh<_i361.Dio>()),
     );
-    gh.lazySingleton<_i412.CatalogRemoteDataSource>(
-      () => _i412.CatalogRemoteDataSourceImpl(gh<_i361.Dio>()),
+    gh.lazySingleton<_i666.PublicRemoteDataSource>(
+      () => _i666.PublicRemoteDataSourceImpl(gh<_i361.Dio>()),
+    );
+    gh.lazySingleton<_i307.PublicRepo>(
+      () => _i487.PublicRepoImpl(gh<_i666.PublicRemoteDataSource>()),
     );
     gh.lazySingleton<_i536.AuthRepo>(
       () => _i820.AuthRepoImpl(
@@ -78,14 +89,23 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i626.AuthRemoteDataSource>(),
       ),
     );
-    gh.lazySingleton<_i21.CatalogRepo>(
-      () => _i839.CatalogRepoImpl(gh<_i412.CatalogRemoteDataSource>()),
-    );
     gh.lazySingleton<_i856.LoginUsecase>(
       () => _i856.LoginUsecase(gh<_i536.AuthRepo>()),
     );
-    gh.lazySingleton<_i622.GetCatalogItemsUsecase>(
-      () => _i622.GetCatalogItemsUsecase(gh<_i21.CatalogRepo>()),
+    gh.lazySingleton<_i805.GetCatalogItemsUsecase>(
+      () => _i805.GetCatalogItemsUsecase(gh<_i307.PublicRepo>()),
+    );
+    gh.lazySingleton<_i931.GetCategoriesUsecase>(
+      () => _i931.GetCategoriesUsecase(gh<_i307.PublicRepo>()),
+    );
+    gh.lazySingleton<_i439.GetSuppliersUsecase>(
+      () => _i439.GetSuppliersUsecase(gh<_i307.PublicRepo>()),
+    );
+    gh.factory<_i35.SuppliersCubit>(
+      () => _i35.SuppliersCubit(gh<_i439.GetSuppliersUsecase>()),
+    );
+    gh.factory<_i137.CatalogCubit>(
+      () => _i137.CatalogCubit(gh<_i805.GetCatalogItemsUsecase>()),
     );
     gh.lazySingleton<_i911.GetCurrentUserUsecase>(
       () => _i911.GetCurrentUserUsecase(gh<_i536.AuthRepo>()),
@@ -128,11 +148,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i235.SaveRefreshTokenUseCase>(),
       ),
     );
-    gh.factory<_i744.CatalogCubit>(
-      () => _i744.CatalogCubit(gh<_i622.GetCatalogItemsUsecase>()),
-    );
     gh.factory<_i384.MeCubit>(
       () => _i384.MeCubit(gh<_i911.GetCurrentUserUsecase>()),
+    );
+    gh.factory<_i1040.CategoriesCubit>(
+      () => _i1040.CategoriesCubit(gh<_i931.GetCategoriesUsecase>()),
     );
     gh.factory<_i725.LogOutCubit>(
       () => _i725.LogOutCubit(

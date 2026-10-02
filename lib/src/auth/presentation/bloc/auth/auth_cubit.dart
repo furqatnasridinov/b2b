@@ -1,5 +1,6 @@
 import 'package:b2b_seller/core/errors/failures.dart';
 import 'package:b2b_seller/core/services/enums.dart';
+import 'package:b2b_seller/core/services/local_data_storage.dart';
 import 'package:b2b_seller/core/utils/typedef.dart';
 import 'package:b2b_seller/src/auth/domain/entity/register_entity.dart';
 import 'package:b2b_seller/src/auth/domain/usecase/login_usecase.dart';
@@ -38,7 +39,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
     await result.fold<Future<void>>(
       (failure) async => _emitFailure(failure),
-      _saveTokensAndComplete,
+      (tokens) => _saveTokensAndComplete(tokens, role),
     );
   }
 
@@ -66,11 +67,11 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
     await result.fold<Future<void>>(
       (failure) async => _emitFailure(failure),
-      _saveTokensAndComplete,
+      (tokens) => _saveTokensAndComplete(tokens, role),
     );
   }
 
-  Future<void> _saveTokensAndComplete(DataMap tokens) async {
+  Future<void> _saveTokensAndComplete(DataMap tokens, Role role) async {
     final accessToken = tokens['access_token'] as String?;
     if (accessToken == null || accessToken.isEmpty) {
       emit(
@@ -87,6 +88,10 @@ class AuthCubit extends Cubit<AuthCubitState> {
     if (refreshToken != null && refreshToken.isNotEmpty) {
       await _saveRefreshTokenUseCase.call(refreshToken);
     }
+    await LocalDataStorage.setString(
+      LocalDataStorageKeys.currentRole,
+      role.name,
+    );
 
     emit(const AuthCubitState(status: ProgressStatus.success));
   }

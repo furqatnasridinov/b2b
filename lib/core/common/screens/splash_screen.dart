@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:b2b_seller/core/common/screens/base_url_settings.dart';
 import 'package:b2b_seller/core/common/screens/error_screen.dart';
-import 'package:b2b_seller/core/common/screens/main_screen.dart';
+import 'package:b2b_seller/core/common/widget/scaffold_with_navigation_shell.dart';
 import 'package:b2b_seller/core/common/widget/custom_loader.dart';
 import 'package:b2b_seller/core/resources/resources.dart';
 import 'package:b2b_seller/core/services/local_data_storage.dart';
@@ -97,7 +97,7 @@ class _SplashScreenState extends State<SplashScreen>
         return;
       }
       _hasNavigated = true;
-      context.go(MainScreen.path);
+      context.go(homePathFor(state.user?.role));
       return;
     }
 

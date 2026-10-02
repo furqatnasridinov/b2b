@@ -3,6 +3,8 @@ class AppConstants {
 
   static const String appName = 'Demo';
 
+  static const int defaultPaginationLimit = 10;
+
   // passwords demo
   static const String buyerEmail = 'buyer@example.com';
   static const String buyerPassword = 'Buyer123!';

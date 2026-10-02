@@ -8,8 +8,14 @@ class MyRequestsScreen extends StatelessWidget {
   static const name = 'my-requests';
 
   @override
-  Widget build(BuildContext context) => const FeaturePlaceholder(
-    title: 'Мои заявки',
-    icon: Icons.assignment_outlined,
-  );
+  Widget build(BuildContext context) {
+    return const SectionScreenLayout(
+      title: 'Мои заявки',
+      child: EmptyState(
+        icon: Icons.assignment_outlined,
+        title: 'Заявок пока нет',
+        description: 'Созданные вами заявки появятся здесь.',
+      ),
+    );
+  }
 }

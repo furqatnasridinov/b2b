@@ -1,4 +1,3 @@
-import 'package:b2b_seller/core/common/screens/my_requests_screen.dart';
 import 'package:b2b_seller/core/common/screens/my_reviews_screen.dart';
 import 'package:b2b_seller/core/common/screens/payments_screen.dart';
 import 'package:b2b_seller/core/common/screens/subscription_screen.dart';
@@ -18,11 +17,6 @@ class BuyerProfileScreen extends StatelessWidget {
       title: 'Профиль',
       showProfileHeader: true,
       items:  [
-        SectionMenuItem(
-          icon: Icons.assignment_outlined,
-          title: 'Мои заявки',
-          path: MyRequestsScreen.path,
-        ),
         SectionMenuItem(
           icon: Icons.account_balance_wallet_outlined,
           title: 'Платежи',

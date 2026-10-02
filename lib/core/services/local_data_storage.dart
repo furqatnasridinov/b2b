@@ -1,7 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
 class LocalDataStorage {
   LocalDataStorage._();
   static SharedPreferences? _preferences;
@@ -16,7 +14,7 @@ class LocalDataStorage {
   }
 
   static Future<void> setString(String key, String value) async {
-      await _preferences?.setString(key, value);
+    await _preferences?.setString(key, value);
   }
 
   static String getString(String key) {
@@ -47,4 +45,5 @@ class LocalDataStorageKeys {
   static const String isDarkMode = 'isDarkMode';
   static const String locale = 'locale';
   static const String baseUrl = 'baseUrl';
+  static const String currentRole = 'currentRole';
 }

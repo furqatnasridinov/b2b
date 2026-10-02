@@ -1,10 +1,11 @@
 export 'admin_profile_screen.dart';
-export 'buyer_products_screen.dart';
+export 'buyer_home_screen.dart';
 export 'buyer_profile_screen.dart';
 export 'chat_screen.dart';
 export 'contracts_screen.dart';
 export 'contractors_screen.dart';
 export 'customers_screen.dart';
+export 'deals_screen.dart';
 export 'error_screen.dart';
 export 'finance_screen.dart';
 export 'main_screen.dart';

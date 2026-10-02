@@ -80,6 +80,16 @@ class AppRouter {
           StatefulShellBranch(
             routes: [
               GoRoute(
+                path: BuyerHomeScreen.path,
+                name: BuyerHomeScreen.name,
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: BuyerHomeScreen()),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
                 path: MainScreen.path,
                 name: MainScreen.name,
                 pageBuilder: (context, state) =>
@@ -90,10 +100,20 @@ class AppRouter {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: BuyerProductsScreen.path,
-                name: BuyerProductsScreen.name,
+                path: DealsScreen.path,
+                name: DealsScreen.name,
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: BuyerProductsScreen()),
+                    const NoTransitionPage(child: DealsScreen()),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: MyRequestsScreen.path,
+                name: MyRequestsScreen.name,
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: MyRequestsScreen()),
               ),
             ],
           ),
@@ -169,11 +189,6 @@ class AppRouter {
         path: MyOffersScreen.path,
         name: MyOffersScreen.name,
         builder: (context, state) => const MyOffersScreen(),
-      ),
-      GoRoute(
-        path: MyRequestsScreen.path,
-        name: MyRequestsScreen.name,
-        builder: (context, state) => const MyRequestsScreen(),
       ),
       GoRoute(
         path: PaymentsScreen.path,

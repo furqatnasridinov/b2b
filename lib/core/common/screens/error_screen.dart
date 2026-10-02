@@ -1,5 +1,5 @@
 import 'package:b2b_seller/core/common/screens/base_url_settings.dart';
-import 'package:b2b_seller/core/common/screens/main_screen.dart';
+import 'package:b2b_seller/core/common/widget/scaffold_with_navigation_shell.dart';
 import 'package:b2b_seller/src/auth/presentation/bloc/me/me_cubit.dart';
 import 'package:b2b_seller/src/auth/presentation/view/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class ErrorScreen extends StatelessWidget {
           (current.isCompleted || current.isFailed),
       listener: (context, state) {
         if (state.isCompleted) {
-          context.go(MainScreen.path);
+          context.go(homePathFor(state.user?.role));
           return;
         }
         if (state.isFailed && state.statusCode == 401) {
@@ -70,8 +70,8 @@ class ErrorScreen extends StatelessWidget {
                         final text = cubitMessage.isNotEmpty
                             ? cubitMessage
                             : (extraMessage.isNotEmpty
-                                ? extraMessage
-                                : 'Не удалось загрузить данные');
+                                  ? extraMessage
+                                  : 'Не удалось загрузить данные');
                         return Text(
                           text,
                           textAlign: TextAlign.center,

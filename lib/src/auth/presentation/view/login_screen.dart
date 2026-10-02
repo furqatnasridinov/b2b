@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:b2b_seller/core/common/screens/main_screen.dart';
 import 'package:b2b_seller/core/common/widget/widget.dart';
 import 'package:b2b_seller/core/services/app_constants.dart';
 import 'package:b2b_seller/core/services/enums.dart';
 import 'package:b2b_seller/core/services/validators.dart';
 import 'package:b2b_seller/src/auth/presentation/bloc/auth/auth_cubit.dart';
+import 'package:b2b_seller/src/auth/presentation/bloc/me/me_cubit.dart';
 import 'package:b2b_seller/src/auth/presentation/view/register_screen.dart';
 import 'package:b2b_seller/src/auth/presentation/widget/auth_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state.isCompleted) {
           unawaited(HapticFeedback.mediumImpact());
-          context.go(MainScreen.path);
+          unawaited(context.read<MeCubit>().get());
+          context.go(homePathFor(_selectedRole));
         }
       },
       builder: (context, state) {
